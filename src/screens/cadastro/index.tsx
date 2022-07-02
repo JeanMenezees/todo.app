@@ -11,7 +11,11 @@ import {
 } from "react-native";
 import BaseScreen from "../base-screen";
 
+import { useNavigation } from "@react-navigation/native";
+
 function Cadastrar() {
+    const navigation = useNavigation();
+
     return (
         <BaseScreen>
             <KeyboardAvoidingView
@@ -39,7 +43,7 @@ function Cadastrar() {
                         <Text style={styles.botao_cadastrar}>Cadastrar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <Text style={styles.voltar_login}>{"<-- "}Voltar para o login</Text>
+                        <Text style={styles.voltar_login} onPress={() => navigation.navigate("Login")} >{"<-- "}Voltar para o login</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>

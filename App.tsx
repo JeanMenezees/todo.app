@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-import { View } from 'react-native';
 
 import { CourierPrime_400Regular } from '@expo-google-fonts/courier-prime';
-import Login from './src/screens/login';
-import Cadastrar from './src/screens/cadastro';
 
+import { NavigationContainer } from '@react-navigation/native';
+import RotaLogin from './src/routes/login';
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -42,6 +41,8 @@ export default function App() {
   }
 
   return (
-    <Cadastrar />
+    <NavigationContainer>
+      <RotaLogin />
+    </NavigationContainer>
   );
 }

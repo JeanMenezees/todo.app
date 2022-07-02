@@ -11,7 +11,11 @@ import {
 } from "react-native";
 import BaseScreen from "../base-screen";
 
+import { useNavigation } from '@react-navigation/native';
+
 function Login() {
+  const navigation = useNavigation();
+
   return (
     <BaseScreen>
       <KeyboardAvoidingView
@@ -38,7 +42,7 @@ function Login() {
               Não possuo uma conta ainda,{" "}
             </Text>
             <TouchableOpacity>
-              <Text style={styles.botao_criar_conta}>Criar conta</Text>
+              <Text style={styles.botao_criar_conta} onPress={() => navigation.navigate("Cadastrar")}>Criar conta</Text>
             </TouchableOpacity>
           </View>
         </View>
