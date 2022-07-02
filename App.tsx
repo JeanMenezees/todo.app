@@ -6,6 +6,7 @@ import { View } from 'react-native';
 
 import { CourierPrime_400Regular } from '@expo-google-fonts/courier-prime';
 import Login from './src/screens/login';
+import Cadastrar from './src/screens/cadastro';
 
 
 export default function App() {
@@ -28,7 +29,7 @@ export default function App() {
 
   useEffect(() => {
     async function hideSplash() {
-      if(appIsReady) {
+      if (appIsReady) {
         await SplashScreen.hideAsync();
       }
     }
@@ -41,6 +42,6 @@ export default function App() {
   }
 
   return (
-    <Login />
+    <Cadastrar />
   );
 }
