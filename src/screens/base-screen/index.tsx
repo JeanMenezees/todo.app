@@ -1,12 +1,14 @@
-import * as React from 'react';
-import { FunctionComponent } from 'react';
-import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import * as React from "react";
+import { FunctionComponent } from "react";
+import { SafeAreaView, StatusBar, StyleSheet } from "react-native";
 
 interface BaseScreenProps {
-    children: JSX.Element
+  children: JSX.Element;
 }
 
-const BaseScreen: FunctionComponent<BaseScreenProps> = (props: BaseScreenProps) => (
+const BaseScreen: FunctionComponent<BaseScreenProps> = (
+  props: BaseScreenProps
+) => (
   <SafeAreaView style={styles.container}>
     <StatusBar />
     {props.children}
@@ -15,8 +17,8 @@ const BaseScreen: FunctionComponent<BaseScreenProps> = (props: BaseScreenProps) 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
+    flex: 1
+  }
 });
 
 export default BaseScreen;
