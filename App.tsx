@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import * as SplashScreen from 'expo-splash-screen';
-import * as Font from 'expo-font';
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
 
-import { CourierPrime_400Regular } from '@expo-google-fonts/courier-prime';
+import { CourierPrime_400Regular } from "@expo-google-fonts/courier-prime";
 
-import { NavigationContainer } from '@react-navigation/native';
-import RotaLogin from './src/routes/login';
+import { NavigationContainer } from "@react-navigation/native";
+import RotaLogin from "./src/routes/login";
+import LoginProvider from "./src/contexts/login/login-context";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -15,7 +16,7 @@ export default function App() {
     async function prepare() {
       try {
         await SplashScreen.preventAutoHideAsync();
-        await Font.loadAsync('Courier Prime', CourierPrime_400Regular)
+        await Font.loadAsync("Courier Prime", CourierPrime_400Regular);
       } catch (e) {
         console.warn(e);
       } finally {
@@ -42,7 +43,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <RotaLogin />
+      <LoginProvider>
+        <RotaLogin />
+      </LoginProvider>
     </NavigationContainer>
   );
 }

@@ -7,11 +7,14 @@ import {
   Platform,
   View
 } from "react-native";
+import { LoginContext } from "../../../contexts/login/login-context";
 import BaseScreen from "../base-screen";
 
 import { UsuarioFormProps } from "./props";
 
-function UsuarioForm(props: UsuarioFormProps) {    
+function UsuarioForm(props: UsuarioFormProps) {
+  const loginContext = React.useContext(LoginContext);
+
   return (
     <BaseScreen>
       <KeyboardAvoidingView
@@ -21,6 +24,11 @@ function UsuarioForm(props: UsuarioFormProps) {
         <View style={styles.content}>
           <Text style={styles.titulo}>{props.titulo}</Text>
           {props.usuarioFormInputs}
+
+          {loginContext?.erro ? (
+            <Text style={styles.erro}>{loginContext.erro.mensagem}</Text>
+          ) : null}
+
           {props.formFooter}
         </View>
       </KeyboardAvoidingView>

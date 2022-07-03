@@ -5,48 +5,17 @@ import {
   TextInput,
   StyleSheet,
   View,
-  TouchableOpacity,
-  Alert
+  TouchableOpacity
 } from "react-native";
 import BaseScreen from "../../common/screens/base-screen";
 
 import { useNavigation } from "@react-navigation/native";
 import UsuarioForm from "../../common/screens/usuario-form";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Usuario } from "../../common/interfaces/usuario";
+import { LoginContext } from "../../contexts/login/login-context";
 
 function Login() {
   const navigation = useNavigation();
-
-  const [usuario, setUsuario] = useState<string>(" ");
-  const [senha, setSenha] = useState<string>(" ");
-
-  const [erro, setErro] = useState<string>();
-
-  useEffect(() => {
-    const formInvalido = !usuario || !senha;
-    if(formInvalido) setErro("Preencha todos os campos!");
-    else setErro('');
-  }, [usuario, senha])
-
-  const login = (usuario: string, senha: string) => {
-    const formInvalido = !usuario || !senha || usuario === " " || senha === " ";
-
-    if (formInvalido) {
-      setErro("Preencha todos os campos!");
-    } else {
-      const usuarioDTO: Usuario = {
-        username: usuario,
-        password: senha
-      };
-
-      axios
-        .post("http://192.168.1.5:3000/users/auth/login", usuarioDTO)
-        .then((data) => navigation.navigate('Todos'))
-        .catch((error) => Alert.alert("Usuário ou senha inválidos"));
-    }
-  };
+  const loginContext = React.useContext(LoginContext);
 
   const formInputs = (): JSX.Element => {
     return (
@@ -55,23 +24,30 @@ function Login() {
           style={styles.input}
           keyboardType="default"
           placeholder="usuário"
+          value={loginContext?.usuario?.username}
           onChange={(event) => {
             event.preventDefault();
 
-            setUsuario(event.nativeEvent.text);
+            loginContext?.setUsuario({
+              ...loginContext.usuario,
+              username: event.nativeEvent.text
+            });
           }}
         />
         <TextInput
           style={styles.input}
           keyboardType="visible-password"
           placeholder="senha"
+          value={loginContext?.usuario?.password}
           onChange={(event) => {
             event.preventDefault();
 
-            setSenha(event.nativeEvent.text);
+            loginContext?.setUsuario({
+              ...loginContext.usuario,
+              password: event.nativeEvent.text
+            });
           }}
         />
-        {erro ? <Text style={styles.erro}>{erro}</Text> : null}
       </>
     );
   };
@@ -82,7 +58,7 @@ function Login() {
         <TouchableOpacity>
           <Text
             style={styles.botao_entrar}
-            onPress={() => login(usuario, senha)}
+            onPress={() => loginContext?.login()}
           >
             Entrar
           </Text>
@@ -152,9 +128,9 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   erro: {
-    color: 'red',
+    color: "red",
     marginVertical: 16,
-    fontFamily: 'Courier Prime',
+    fontFamily: "Courier Prime",
     lineHeight: 24,
     fontSize: 16
   }
