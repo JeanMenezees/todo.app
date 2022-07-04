@@ -106,20 +106,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     width: "100%",
     fontFamily: "Courier Prime",
-    lineHeight: 24,
+    lineHeight: 16,
     fontSize: 16,
     marginTop: 32,
-    paddingVertical: 16
+    paddingVertical: 8
   },
   texto_botao: {
     fontFamily: "Courier Prime",
-    lineHeight: 24,
+    lineHeight: 16,
     fontSize: 16,
     backgroundColor: "black",
     color: "white",
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
     textAlign: "center",
-    marginVertical: 8,
-    marginRight: 8
+    marginVertical: 8
   }
 });
