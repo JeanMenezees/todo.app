@@ -7,13 +7,13 @@ import {
   Platform,
   View
 } from "react-native";
-import { LoginContext } from "../../../contexts/login/login-context";
+import { UsuarioContext } from "../../../contexts/usuario/usuario-context";
 import BaseScreen from "../base-screen";
 
 import { UsuarioFormProps } from "./props";
 
 function UsuarioForm(props: UsuarioFormProps) {
-  const loginContext = React.useContext(LoginContext);
+  const loginContext = React.useContext(UsuarioContext);
 
   return (
     <BaseScreen>

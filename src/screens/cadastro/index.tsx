@@ -10,9 +10,10 @@ import BaseScreen from "../../common/screens/base-screen";
 
 import { useNavigation } from "@react-navigation/native";
 import UsuarioForm from "../../common/screens/usuario-form";
+import { UsuarioFormScreenProps } from "../../contexts/usuario/usuario-context";
 
 function Cadastrar() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<UsuarioFormScreenProps>();
 
   const formInputs = (): JSX.Element => {
     return (

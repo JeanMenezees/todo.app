@@ -7,7 +7,7 @@ import { CourierPrime_400Regular } from "@expo-google-fonts/courier-prime";
 
 import { NavigationContainer } from "@react-navigation/native";
 import RotaLogin from "./src/routes/login";
-import LoginProvider from "./src/contexts/login/login-context";
+import UsuarioProvider from "./src/contexts/usuario/usuario-context";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -43,9 +43,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <LoginProvider>
+      <UsuarioProvider>
         <RotaLogin />
-      </LoginProvider>
+      </UsuarioProvider>
     </NavigationContainer>
   );
 }

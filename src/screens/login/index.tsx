@@ -11,11 +11,11 @@ import BaseScreen from "../../common/screens/base-screen";
 
 import { useNavigation } from "@react-navigation/native";
 import UsuarioForm from "../../common/screens/usuario-form";
-import { LoginContext } from "../../contexts/login/login-context";
+import { UsuarioContext, UsuarioFormScreenProps } from "../../contexts/usuario/usuario-context";
 
 function Login() {
-  const navigation = useNavigation();
-  const loginContext = React.useContext(LoginContext);
+  const navigation = useNavigation<UsuarioFormScreenProps>();
+  const usuarioContext = React.useContext(UsuarioContext);
 
   const formInputs = (): JSX.Element => {
     return (
@@ -24,12 +24,12 @@ function Login() {
           style={styles.input}
           keyboardType="default"
           placeholder="usuário"
-          value={loginContext?.usuario?.username}
+          value={usuarioContext?.usuario?.username}
           onChange={(event) => {
             event.preventDefault();
 
-            loginContext?.setUsuario({
-              ...loginContext.usuario,
+            usuarioContext?.setUsuario({
+              ...usuarioContext.usuario,
               username: event.nativeEvent.text
             });
           }}
@@ -38,12 +38,12 @@ function Login() {
           style={styles.input}
           keyboardType="visible-password"
           placeholder="senha"
-          value={loginContext?.usuario?.password}
+          value={usuarioContext?.usuario?.password}
           onChange={(event) => {
             event.preventDefault();
 
-            loginContext?.setUsuario({
-              ...loginContext.usuario,
+            usuarioContext?.setUsuario({
+              ...usuarioContext.usuario,
               password: event.nativeEvent.text
             });
           }}
@@ -58,7 +58,7 @@ function Login() {
         <TouchableOpacity>
           <Text
             style={styles.botao_entrar}
-            onPress={() => loginContext?.login()}
+            onPress={() => usuarioContext?.login()}
           >
             Entrar
           </Text>

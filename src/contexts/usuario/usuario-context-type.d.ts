@@ -1,9 +1,9 @@
 import { Usuario } from "../../common/interfaces/usuario";
-import { LoginError } from "./error-type";
+import { UsuarioError } from "./error-type";
 
-export interface LoginContextType {
+export interface UsuarioContextType {
     usuario: Usuario | undefined;
     setUsuario: React.Dispatch<React.SetStateAction<Usuario | undefined>>;
-    erro: LoginError | null;
+    erro: UsuarioError | null;
     login: () => void;
 }
