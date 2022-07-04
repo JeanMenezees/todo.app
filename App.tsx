@@ -6,7 +6,7 @@ import * as Font from "expo-font";
 import { CourierPrime_400Regular } from "@expo-google-fonts/courier-prime";
 
 import { NavigationContainer } from "@react-navigation/native";
-import RotaLogin from "./src/routes/login";
+import Root from "./src/routes/root";
 import UsuarioProvider from "./src/contexts/usuario/usuario-context";
 import TodoProvider from "./src/contexts/todo/todo-context";
 
@@ -44,11 +44,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <UsuarioProvider>
-        <TodoProvider>
-          <RotaLogin />
-        </TodoProvider>
-      </UsuarioProvider>
+      <Root />
     </NavigationContainer>
   );
 }

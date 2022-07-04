@@ -20,32 +20,67 @@ const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
     null
   );
 
-  const criarTodo = (): void => {
+  const criarTodo = async () => {
     if (todo) {
       const criarTodoDTO: CriarTodoDTO = {
         titulo: todo?.titulo,
         descricao: todo?.descricao
       };
+
+      const token = await AsyncStorage.getItem("token");
+
+      const configs: AxiosRequestConfig<any> = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+
       axios
-        .post("http://192.168.1.5:3000/todo", criarTodoDTO)
-        .then((data) => setFeedback({ mensagem: "Todo criado com sucesso!" }))
-        .catch((error) =>
-          setFeedback({ mensagem: "Ocorreu um erro ao criar o Todo" })
-        );
+        .post("http://192.168.1.5:3000/todo", criarTodoDTO, configs)
+        .then(async (data) => {
+          const todoCriado: Todo = data.data;
+
+          await limparDados();
+
+          setTodos(todos ? [...todos, todoCriado] : [todoCriado]);
+        })
+        .catch((error) => {
+          setFeedback({ mensagem: "Ocorreu um erro ao criar o Todo" });
+
+          setTimeout(() => {
+            setFeedback(null);
+          }, 5000);
+        })
+        .finally(() => {
+          setFeedback({ mensagem: "Todo criado com sucesso!" });
+
+          setTimeout(() => {
+            setFeedback(null);
+          }, 5000);
+        });
     }
   };
 
-  const atualizarTodo = (): void => {
+  const atualizarTodo = async () => {
+    const token = await AsyncStorage.getItem("token");
+
+    const configs: AxiosRequestConfig<any> = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
     if (todo) {
       const atualizarTodoDTO: AtualizarTodoDTO = {
         titulo: todo?.titulo,
         descricao: todo?.descricao
-
-
-
       };
       axios
-        .put(`http://192.168.1.5:3000/todo/id/${todo.id}`, atualizarTodoDTO)
+        .put(
+          `http://192.168.1.5:3000/todo/id/${todo.id}`,
+          atualizarTodoDTO,
+          configs
+        )
         .then((data) => setFeedback({ mensagem: "Todo alterado com sucesso!" }))
         .catch((error) =>
           setFeedback({ mensagem: "Ocorreu um erro ao alterar o Todo" })
@@ -77,6 +112,14 @@ const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
       .finally(() => {
         setTodosIsLoading(false);
       });
+  };
+
+  const limparDados = async () => {
+    setTodo((todoAntigo) => {
+      if (todoAntigo) {
+        return { ...todoAntigo, titulo: "", descricao: "" };
+      } else return null;
+    });
   };
 
   return (
