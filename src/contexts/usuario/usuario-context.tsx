@@ -4,7 +4,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import axios from "axios";
 import React, { useEffect } from "react";
 import { Alert } from "react-native";
-import { Usuario } from "../../common/interfaces/usuario";
+import { Usuario } from "./usuario-interface";
 import { UsuarioFormParamRoute } from "./usuario-form-route-param";
 import { UsuarioError } from "./usuario-error-interface";
 import { UsuarioContextType } from "./usuario-context-interface";
