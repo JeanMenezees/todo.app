@@ -3,71 +3,96 @@ import * as React from "react";
 import {
   Text,
   TextInput,
-  KeyboardAvoidingView,
   StyleSheet,
-  Platform,
   View,
   TouchableOpacity
 } from "react-native";
-import BaseScreen from "../base-screen";
+import BaseScreen from "../../common/screens/base-screen";
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import UsuarioForm from "../../common/screens/usuario-form";
+import { UsuarioContext, UsuarioFormScreenProps } from "../../contexts/usuario/usuario-context";
 
 function Login() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<UsuarioFormScreenProps>();
+  const usuarioContext = React.useContext(UsuarioContext);
+
+  const formInputs = (): JSX.Element => {
+    return (
+      <>
+        <TextInput
+          style={styles.input}
+          keyboardType="default"
+          placeholder="usuário"
+          value={usuarioContext?.usuario?.username}
+          onChange={(event) => {
+            event.preventDefault();
+
+            usuarioContext?.setUsuario({
+              ...usuarioContext.usuario,
+              username: event.nativeEvent.text
+            });
+          }}
+        />
+        <TextInput
+          style={styles.input}
+          keyboardType="visible-password"
+          placeholder="senha"
+          value={usuarioContext?.usuario?.password}
+          onChange={(event) => {
+            event.preventDefault();
+
+            usuarioContext?.setUsuario({
+              ...usuarioContext.usuario,
+              password: event.nativeEvent.text
+            });
+          }}
+        />
+      </>
+    );
+  };
+
+  const formFooter = (): JSX.Element => {
+    return (
+      <>
+        <TouchableOpacity>
+          <Text
+            style={styles.botao_entrar}
+            onPress={() => usuarioContext?.login()}
+          >
+            Entrar
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.criar_conta}>
+          <Text style={styles.texto_criar_conta}>
+            Não possuo uma conta ainda,{" "}
+          </Text>
+          <TouchableOpacity>
+            <Text
+              style={styles.botao_criar_conta}
+              onPress={() => navigation.navigate("Cadastrar")}
+            >
+              Criar conta
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    );
+  };
 
   return (
     <BaseScreen>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={styles.content}>
-          <Text style={styles.titulo}>Login</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="default"
-            placeholder="username"
-          />
-          <TextInput
-            style={styles.input}
-            keyboardType="visible-password"
-            placeholder="senha"
-          />
-          <TouchableOpacity>
-            <Text style={styles.botao_entrar}>Entrar</Text>
-          </TouchableOpacity>
-          <View style={styles.criar_conta}>
-            <Text style={styles.texto_criar_conta}>
-              Não possuo uma conta ainda,{" "}
-            </Text>
-            <TouchableOpacity>
-              <Text style={styles.botao_criar_conta} onPress={() => navigation.navigate("Cadastrar")}>Criar conta</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
+      <UsuarioForm
+        titulo="Login"
+        usuarioFormInputs={formInputs()}
+        formFooter={formFooter()}
+      />
     </BaseScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 16
-  },
-  content: {
-    width: "100%"
-  },
-  titulo: {
-    fontFamily: "Courier Prime",
-    lineHeight: 32,
-    fontSize: 24
-  },
   input: {
-    borderBottomColor: "black",
     borderBottomWidth: 2,
     width: "100%",
     fontFamily: "Courier Prime",
@@ -98,6 +123,13 @@ const styles = StyleSheet.create({
   botao_criar_conta: {
     marginTop: 24,
     color: "green",
+    fontFamily: "Courier Prime",
+    lineHeight: 24,
+    fontSize: 16
+  },
+  erro: {
+    color: "red",
+    marginVertical: 16,
     fontFamily: "Courier Prime",
     lineHeight: 24,
     fontSize: 16
