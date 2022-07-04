@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../../screens/login";
 import Cadastrar from "../../screens/cadastro";
 
-import React, { ReactNode } from "react";
+import React from "react";
 import { Todo } from "../../screens/todos";
 
 const Stack = createNativeStackNavigator();

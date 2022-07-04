@@ -8,6 +8,7 @@ import { CourierPrime_400Regular } from "@expo-google-fonts/courier-prime";
 import { NavigationContainer } from "@react-navigation/native";
 import RotaLogin from "./src/routes/login";
 import UsuarioProvider from "./src/contexts/usuario/usuario-context";
+import TodoProvider from "./src/contexts/todo/todo-context";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -44,7 +45,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <UsuarioProvider>
-        <RotaLogin />
+        <TodoProvider>
+          <RotaLogin />
+        </TodoProvider>
       </UsuarioProvider>
     </NavigationContainer>
   );
