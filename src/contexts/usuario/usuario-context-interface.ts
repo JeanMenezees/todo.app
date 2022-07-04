@@ -1,5 +1,5 @@
 import { Usuario } from "../../common/interfaces/usuario";
-import { UsuarioError } from "./error-type";
+import { UsuarioError } from "./usuario-error-interface";
 
 export interface UsuarioContextType {
     usuario: Usuario | undefined;
