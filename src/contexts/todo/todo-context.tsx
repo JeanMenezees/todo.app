@@ -12,7 +12,9 @@ TodoContext.displayName = "Todo";
 const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [todo, setTodo] = React.useState<Todo | null>(null);
   const [feedBack, setFeedback] = React.useState<TodoFeedback | null>(null);
+
   const [todos, setTodos] = React.useState<Todo[] | null>(null);
+  const [todosIsLoading, setTodosIsLoading] = React.useState<boolean | null>(null);
 
   const criarTodo = (): void => {
     if (todo) {
@@ -45,21 +47,35 @@ const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
       }
     };
 
+    setTodosIsLoading(true);
+
     axios
       .get("http://192.168.1.5:3000/todo", configs)
       .then((data) => {
         const todosResposta: Todo[] = data.data;
 
-        console.log(todosResposta);
+        setTodos(todosResposta);
       })
       .catch((error) =>
         setFeedback({ mensagem: "Ocorreu um erro ao carregar os Todos" })
-      );
+      )
+      .finally(() => {
+        setTodosIsLoading(false);
+      })
   };
 
   return (
     <TodoContext.Provider
-      value={{ todo, setTodo, criarTodo, atualizarTodo, feedBack, obterTodos }}
+      value={{
+        todo,
+        setTodo,
+        criarTodo,
+        atualizarTodo,
+        feedBack,
+        obterTodos,
+        todos,
+        todosIsLoading
+      }}
     >
       {children}
     </TodoContext.Provider>

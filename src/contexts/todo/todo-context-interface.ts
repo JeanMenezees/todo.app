@@ -7,5 +7,7 @@ export interface TodoContextType {
     criarTodo: () => void;
     atualizarTodo: () =>void;
     feedBack: TodoFeedback | null;
-    obterTodos: () =>void;
+    obterTodos: () => void;
+    todos: Todo[] | null;
+    todosIsLoading: boolean | null;
 }
