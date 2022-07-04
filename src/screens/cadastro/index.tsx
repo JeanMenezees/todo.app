@@ -9,6 +9,7 @@ import {
   UsuarioContext,
   UsuarioFormScreenProps
 } from "../../contexts/usuario/usuario-context";
+import { Usuario } from "../../contexts/usuario/usuario-interface";
 
 function Cadastrar() {
   const navigation = useNavigation<UsuarioFormScreenProps>();
@@ -22,36 +23,42 @@ function Cadastrar() {
           keyboardType="default"
           placeholder="username"
           value={contexto?.usuario?.username}
-          onChange={(event) =>
+          onChange={(event) => {
+            const usuario = contexto?.usuario as Usuario;
+
             contexto?.setUsuario({
-              ...contexto.usuario,
+              ...usuario,
               username: event.nativeEvent.text
-            })
-          }
+            });
+          }}
         />
         <TextInput
           style={styles.input}
           keyboardType="email-address"
           placeholder="email"
           value={contexto?.usuario?.email}
-          onChange={(event) =>
+          onChange={(event) => {
+            const usuario = contexto?.usuario as Usuario;
+
             contexto?.setUsuario({
-              ...contexto.usuario,
+              ...usuario,
               email: event.nativeEvent.text
-            })
-          }
+            });
+          }}
         />
         <TextInput
           style={styles.input}
           keyboardType="visible-password"
           placeholder="senha"
           value={contexto?.usuario?.password}
-          onChange={(event) =>
+          onChange={(event) => {
+            const usuario = contexto?.usuario as Usuario;
+
             contexto?.setUsuario({
-              ...contexto.usuario,
+              ...usuario,
               password: event.nativeEvent.text
-            })
-          }
+            });
+          }}
         />
       </>
     );
@@ -60,10 +67,12 @@ function Cadastrar() {
   const formFooter = (): JSX.Element => {
     return (
       <>
-        <TouchableOpacity>
+        <TouchableOpacity
+          disabled={contexto?.erro ? true : false}
+          onPress={() => contexto?.registrar()}
+        >
           <Text
             style={styles.botao_cadastrar}
-            onPress={() => contexto?.registrar()}
           >
             Cadastrar
           </Text>

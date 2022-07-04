@@ -63,13 +63,11 @@ function Login() {
   const formFooter = (): JSX.Element => {
     return (
       <>
-        <TouchableOpacity>
-          <Text
-            style={styles.botao_entrar}
-            onPress={() => usuarioContext?.login()}
-          >
-            Entrar
-          </Text>
+        <TouchableOpacity
+          disabled={usuarioContext?.erro ? true : false}
+          onPress={() => usuarioContext?.login()}
+        >
+          <Text style={styles.botao_entrar}>Entrar</Text>
         </TouchableOpacity>
         <View style={styles.criar_conta}>
           <Text style={styles.texto_criar_conta}>
