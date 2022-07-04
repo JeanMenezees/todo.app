@@ -6,4 +6,6 @@ export interface UsuarioContextType {
     setUsuario: React.Dispatch<React.SetStateAction<Usuario | undefined>>;
     erro: UsuarioError | null;
     login: () => void;
+    registrar: () => void;
+    limparDados: () => void;
 }

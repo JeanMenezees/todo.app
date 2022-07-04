@@ -1,19 +1,18 @@
 import * as React from "react";
 
-import {
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity
-} from "react-native";
+import { Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import BaseScreen from "../../common/screens/base-screen";
 
 import { useNavigation } from "@react-navigation/native";
 import UsuarioForm from "../../common/screens/usuario-form";
-import { UsuarioFormScreenProps } from "../../contexts/usuario/usuario-context";
+import {
+  UsuarioContext,
+  UsuarioFormScreenProps
+} from "../../contexts/usuario/usuario-context";
 
 function Cadastrar() {
   const navigation = useNavigation<UsuarioFormScreenProps>();
+  const contexto = React.useContext(UsuarioContext);
 
   const formInputs = (): JSX.Element => {
     return (
@@ -22,16 +21,37 @@ function Cadastrar() {
           style={styles.input}
           keyboardType="default"
           placeholder="username"
+          value={contexto?.usuario?.username}
+          onChange={(event) =>
+            contexto?.setUsuario({
+              ...contexto.usuario,
+              username: event.nativeEvent.text
+            })
+          }
         />
         <TextInput
           style={styles.input}
           keyboardType="email-address"
           placeholder="email"
+          value={contexto?.usuario?.email}
+          onChange={(event) =>
+            contexto?.setUsuario({
+              ...contexto.usuario,
+              email: event.nativeEvent.text
+            })
+          }
         />
         <TextInput
           style={styles.input}
           keyboardType="visible-password"
           placeholder="senha"
+          value={contexto?.usuario?.password}
+          onChange={(event) =>
+            contexto?.setUsuario({
+              ...contexto.usuario,
+              password: event.nativeEvent.text
+            })
+          }
         />
       </>
     );
@@ -41,12 +61,19 @@ function Cadastrar() {
     return (
       <>
         <TouchableOpacity>
-          <Text style={styles.botao_cadastrar}>Cadastrar</Text>
+          <Text
+            style={styles.botao_cadastrar}
+            onPress={() => contexto?.registrar()}
+          >
+            Cadastrar
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity>
           <Text
             style={styles.voltar_login}
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
           >
             {"<-- "}Voltar para o login
           </Text>

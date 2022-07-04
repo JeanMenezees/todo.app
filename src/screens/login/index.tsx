@@ -70,7 +70,11 @@ function Login() {
           <TouchableOpacity>
             <Text
               style={styles.botao_criar_conta}
-              onPress={() => navigation.navigate("Cadastrar")}
+              onPress={async () => {
+                usuarioContext?.limparDados();
+
+                navigation.navigate("Cadastrar")
+              }}
             >
               Criar conta
             </Text>
