@@ -73,18 +73,31 @@ const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
     if (todo) {
       const atualizarTodoDTO: AtualizarTodoDTO = {
         titulo: todo?.titulo,
-        descricao: todo?.descricao
+        descricao: todo?.descricao,
+        completo: todo.completo ? todo.completo : false
       };
+
       axios
         .put(
           `http://192.168.1.5:3000/todo/id/${todo.id}`,
           atualizarTodoDTO,
           configs
         )
-        .then((data) => setFeedback({ mensagem: "Todo alterado com sucesso!" }))
-        .catch((error) =>
-          setFeedback({ mensagem: "Ocorreu um erro ao alterar o Todo" })
-        );
+        .then(async (data) => {
+          await limparDados();
+          setFeedback({ mensagem: "Todo alterado com sucesso!" });
+
+          setTimeout(() => {
+            setFeedback(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          setFeedback({ mensagem: "Ocorreu um erro ao alterar o Todo" });
+
+          setTimeout(() => {
+            setFeedback(null);
+          }, 5000);
+        });
     }
   };
 
@@ -106,9 +119,13 @@ const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
 
         setTodos(todosResposta);
       })
-      .catch((error) =>
-        setFeedback({ mensagem: "Ocorreu um erro ao carregar os Todos" })
-      )
+      .catch((error) => {
+        setFeedback({ mensagem: "Ocorreu um erro ao carregar os Todos" });
+
+        setTimeout(() => {
+          setFeedback(null);
+        }, 5000);
+      })
       .finally(() => {
         setTodosIsLoading(false);
       });

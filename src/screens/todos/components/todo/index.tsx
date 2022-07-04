@@ -1,16 +1,74 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { useContext } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
+import { TodoContext } from "../../../../contexts/todo/todo-context";
 import { Todo } from "../../../../contexts/todo/todo.interface";
 
 export default function TodoItem(todo: Todo) {
-  return (
+  const contexto = useContext(TodoContext);
+
+  const [editar, setEditar] = React.useState<boolean>(false);
+
+  const templateEditar = () => {
+    return (
+      <View style={styles.container}>
+        <TextInput
+          placeholder="titulo"
+          value={contexto?.todo?.titulo}
+          onChange={(event) => {
+            const todo: Todo = contexto?.todo as Todo;
+
+            contexto?.setTodo({ ...todo, titulo: event.nativeEvent.text });
+          }}
+        />
+        <TextInput
+          placeholder="descricao"
+          value={contexto?.todo?.descricao}
+          onChange={(event) => {
+            const todo: Todo = contexto?.todo as Todo;
+
+            contexto?.setTodo({ ...todo, descricao: event.nativeEvent.text });
+          }}
+        />
+        <TouchableOpacity onPress={() => contexto?.atualizarTodo()}>
+          <Text style={styles.texto_botao}>Concluir</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  return editar ? (
+    templateEditar()
+  ) : (
     <View style={styles.container}>
       <Text style={styles.titulo}>{todo.titulo}</Text>
       <Text style={styles.descricao}>{todo.descricao}</Text>
       <View style={styles.botoes}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setEditar(true)}>
           <Text style={styles.texto_botao}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            const todoFinalizado: Todo = {
+              id: todo.id,
+              titulo: todo.titulo,
+              descricao: todo.descricao,
+              completo: true
+            };
+
+            contexto?.setTodo(todoFinalizado);
+            contexto?.atualizarTodo();
+
+
+            
+          }}
+        >
           <Text style={styles.texto_botao}>Finalizar</Text>
         </TouchableOpacity>
       </View>
