@@ -1,5 +1,4 @@
-export interface Todo {
-    id: number;
+export interface CriarTodoDTO {
     titulo: string;
     descricao: string;
 }

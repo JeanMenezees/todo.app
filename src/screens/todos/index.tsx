@@ -24,11 +24,13 @@ export function Todos() {
           <FlatList
             data={contexto?.todos}
             renderItem={({ item }) => (
-              <TodoItem titulo={item.titulo} descricao={item.descricao} />
+              <TodoItem
+                id={item.id}
+                titulo={item.titulo}
+                descricao={item.descricao}
+              />
             )}
-            keyExtractor={(item) =>
-              item.id ? item.id.toString() : item.titulo
-            }
+            keyExtractor={(item) => item.id.toString()}
           />
         )}
       </View>

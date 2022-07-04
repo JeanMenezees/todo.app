@@ -8,6 +8,8 @@ import { Usuario } from "./usuario-interface";
 import { UsuarioFormParamRoute } from "./usuario-form-route-param";
 import { UsuarioError } from "./usuario-error-interface";
 import { UsuarioContextType } from "./usuario-context-interface";
+import { LoginUsuarioDTO } from "./commands/login-usuario-dto";
+import { RegistrarUsuarioDTO } from "./commands/registrar-usuario-dto";
 
 export type UsuarioFormScreenProps = NativeStackNavigationProp<
   UsuarioFormParamRoute,
@@ -21,7 +23,7 @@ export const UsuarioContext = React.createContext<UsuarioContextType | null>(
 UsuarioContext.displayName = "Usuario";
 
 const UsuarioProvider: React.FC<React.ReactNode> = ({ children }) => {
-  const [usuario, setUsuario] = React.useState<Usuario>();
+  const [usuario, setUsuario] = React.useState<Usuario | undefined>(undefined);
   const [erro, setErro] = React.useState<UsuarioError | null>(null);
 
   const navigation = useNavigation<UsuarioFormScreenProps>();
@@ -32,8 +34,13 @@ const UsuarioProvider: React.FC<React.ReactNode> = ({ children }) => {
 
   const login = () => {
     if (usuario) {
+      const loginUsuarioDTO: LoginUsuarioDTO = {
+        username: usuario.username,
+        password: usuario.password
+      };
+
       axios
-        .post("http://192.168.1.5:3000/users/auth/login", usuario)
+        .post("http://192.168.1.5:3000/users/auth/login", loginUsuarioDTO)
         .then(async (data) => {
           const token = await data.data.access_token;
 
@@ -49,12 +56,14 @@ const UsuarioProvider: React.FC<React.ReactNode> = ({ children }) => {
 
   const registrar = () => {
     if (usuario) {
+      const registrarUsuarioDTO: RegistrarUsuarioDTO = {
+        nome: usuario.username,
+        email: usuario.email,
+        senha: usuario.password
+      };
+
       axios
-        .post("http://192.168.1.5:3000/users/register", {
-          nome: usuario.username,
-          email: usuario.email,
-          senha: usuario.password
-        })
+        .post("http://192.168.1.5:3000/users/register", registrarUsuarioDTO)
         .then(async (data) => {
           await limparDados();
 

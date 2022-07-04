@@ -11,7 +11,11 @@ import BaseScreen from "../../common/screens/base-screen";
 
 import { useNavigation } from "@react-navigation/native";
 import UsuarioForm from "../../common/screens/usuario-form";
-import { UsuarioContext, UsuarioFormScreenProps } from "../../contexts/usuario/usuario-context";
+import {
+  UsuarioContext,
+  UsuarioFormScreenProps
+} from "../../contexts/usuario/usuario-context";
+import { Usuario } from "../../contexts/usuario/usuario-interface";
 
 function Login() {
   const navigation = useNavigation<UsuarioFormScreenProps>();
@@ -28,8 +32,10 @@ function Login() {
           onChange={(event) => {
             event.preventDefault();
 
+            const usuario = usuarioContext?.usuario as Usuario;
+
             usuarioContext?.setUsuario({
-              ...usuarioContext.usuario,
+              ...usuario,
               username: event.nativeEvent.text
             });
           }}
@@ -42,8 +48,10 @@ function Login() {
           onChange={(event) => {
             event.preventDefault();
 
+            const usuario = usuarioContext?.usuario as Usuario;
+
             usuarioContext?.setUsuario({
-              ...usuarioContext.usuario,
+              ...usuario,
               password: event.nativeEvent.text
             });
           }}
@@ -73,7 +81,7 @@ function Login() {
               onPress={async () => {
                 usuarioContext?.limparDados();
 
-                navigation.navigate("Cadastrar")
+                navigation.navigate("Cadastrar");
               }}
             >
               Criar conta
