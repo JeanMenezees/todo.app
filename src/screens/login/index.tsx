@@ -39,6 +39,7 @@ function Login() {
               username: event.nativeEvent.text
             });
           }}
+          onPressIn={() => usuarioContext?.setPrecisaValidar(true)}
         />
         <TextInput
           style={styles.input}
@@ -55,6 +56,7 @@ function Login() {
               password: event.nativeEvent.text
             });
           }}
+          onPressIn={() => usuarioContext?.setPrecisaValidar(true)}
         />
       </>
     );

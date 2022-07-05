@@ -5,9 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-  KeyboardAvoidingView,
-  Platform
+  View
 } from "react-native";
 import { TodoContext } from "../../../../contexts/todo/todo-context";
 import { Todo } from "../../../../contexts/todo/todo.interface";
@@ -19,7 +17,7 @@ export default function TodoItem(todo: Todo) {
   const [concluido, setConcluido] = React.useState<boolean>(false);
   const [editar, setEditar] = React.useState<boolean>(false);
 
-  const [todoEditado, setTodoEditado] = React.useState<Todo>({
+  const [todoItem, setTodoItem] = React.useState<Todo>({
     id: todo.id,
     titulo: todo.titulo,
     descricao: todo.descricao,
@@ -27,56 +25,53 @@ export default function TodoItem(todo: Todo) {
   });
 
   useEffect(() => {
-    setConcluido(todo.completa);
+    setConcluido(todoItem.completa);
   }, []);
 
   return concluido ? (
     <TodoConcluido
-      id={todo.id}
-      titulo={todo.titulo}
-      descricao={todo.descricao}
-      completa={todo.completa}
+      id={todoItem.id}
+      titulo={todoItem.titulo}
+      descricao={todoItem.descricao}
+      completa={todoItem.completa}
     />
   ) : editar ? (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder="titulo"
-        onChange={(event) =>
-          setTodoEditado({ ...todoEditado, titulo: event.nativeEvent.text })
-        }
-        value={todoEditado.titulo}
+        onChange={(event) => {
+          console.log(event.nativeEvent.text);
+          setTodoItem({ ...todoItem, titulo: event.nativeEvent.text });
+        }}
+        value={todoItem.titulo}
       />
       <TextInput
         style={styles.input}
         placeholder="descricao"
         onChange={(event) =>
-          setTodoEditado({ ...todoEditado, descricao: event.nativeEvent.text })
+          setTodoItem({ ...todoItem, descricao: event.nativeEvent.text })
         }
-        value={todoEditado.descricao}
+        value={todoItem.descricao}
       />
       <TouchableOpacity
-        disabled={
-          todoEditado === null ||
-          todoEditado.descricao === undefined ||
-          todoEditado.titulo === undefined
-        }
+        disabled={!todoItem.descricao || !todoItem.titulo}
         onPress={() =>
           contexto
-            ?.atualizarTodo(todoEditado, todoEditado.id)
+            ?.atualizarTodo(
+              { titulo: todoItem.titulo, descricao: todoItem.descricao },
+              todoItem.id
+            )
             .then((data) => setEditar(false))
         }
       >
         <Text style={styles.texto_botao}>Concluir</Text>
       </TouchableOpacity>
-    </KeyboardAvoidingView>
+    </View>
   ) : (
     <View style={styles.container}>
-      <Text style={styles.titulo}>{todo.titulo}</Text>
-      <Text style={styles.descricao}>{todo.descricao}</Text>
+      <Text style={styles.titulo}>{todoItem.titulo}</Text>
+      <Text style={styles.descricao}>{todoItem.descricao}</Text>
       <View style={styles.botoes}>
         <TouchableOpacity onPress={() => setEditar(true)}>
           <Text style={styles.texto_botao}>Editar</Text>
@@ -86,8 +81,8 @@ export default function TodoItem(todo: Todo) {
             contexto
               ?.atualizarTodo(
                 {
-                  titulo: todo.titulo,
-                  descricao: todo.descricao,
+                  titulo: todoItem.titulo,
+                  descricao: todoItem.descricao,
                   completa: true
                 },
                 todo.id

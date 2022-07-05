@@ -8,4 +8,5 @@ export interface UsuarioContextType {
     login: () => void;
     registrar: () => void;
     limparDados: () => void;
+    setPrecisaValidar: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -26,6 +26,8 @@ const UsuarioProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [usuario, setUsuario] = React.useState<Usuario | undefined>(undefined);
   const [erro, setErro] = React.useState<UsuarioError | null>(null);
 
+  const [precisaValidar, setPrecisaValidar] = React.useState<boolean>(false);
+
   const navigation = useNavigation<UsuarioFormScreenProps>();
 
   useEffect(() => {
@@ -82,15 +84,24 @@ const UsuarioProvider: React.FC<React.ReactNode> = ({ children }) => {
       mensagem: "Preencha todos os campos!"
     };
 
-    if (!usuario) setErro(erroResposta);
+    if (!usuario && precisaValidar) setErro(erroResposta);
 
-    if (!usuario?.username || !usuario?.password) setErro(erroResposta);
+    if ((!usuario?.username || !usuario?.password) && precisaValidar)
+      setErro(erroResposta);
     else setErro(null);
   };
 
   return (
     <UsuarioContext.Provider
-      value={{ usuario, setUsuario, erro, login, registrar, limparDados }}
+      value={{
+        usuario,
+        setUsuario,
+        erro,
+        login,
+        registrar,
+        limparDados,
+        setPrecisaValidar
+      }}
     >
       {children}
     </UsuarioContext.Provider>
