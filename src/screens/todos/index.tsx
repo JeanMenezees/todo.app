@@ -8,8 +8,9 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
-import Feedback from "../../common/components/feedback";
 import BaseScreen from "../../common/screens/base-screen";
+import Carregamento from "../../common/screens/carregamento";
+import { CriarTodoDTO } from "../../contexts/todo/commands/criar-todo-dto";
 import { TodoContext } from "../../contexts/todo/todo-context";
 import { Todo } from "../../contexts/todo/todo.interface";
 import TodoItem from "./components/todo";
@@ -17,49 +18,19 @@ import TodoItem from "./components/todo";
 export function Todos() {
   const contexto = useContext(TodoContext);
 
+  const [todo, setTodo] = React.useState<CriarTodoDTO | null>(null);
+  
   useEffect(() => {
     contexto?.obterTodos();
   }, []);
 
+  //TODO: verificar os atrasados
+
   return (
     <BaseScreen>
       <View style={styles.container}>
-        <Text style={styles.titulo}>Meus todo's</Text>
-        <View>
-          <Text style={styles.titulo}>Criar todo</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="titulo"
-            value={contexto?.todo?.titulo}
-            onChange={(event) => {
-              const todo = contexto?.todo as Todo;
-
-              contexto?.setTodo({ ...todo, titulo: event.nativeEvent.text });
-            }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="descricao"
-            value={contexto?.todo?.descricao}
-            onChange={(event) => {
-              const todo = contexto?.todo as Todo;
-
-              contexto?.setTodo({ ...todo, descricao: event.nativeEvent.text });
-            }}
-          />
-          <TouchableOpacity>
-            <Text
-              style={styles.texto_botao}
-              onPress={() => contexto?.criarTodo()}
-            >
-              Criar
-            </Text>
-          </TouchableOpacity>
-        </View>
         {contexto?.todosIsLoading ? (
-          <View style={styles.carregando}>
-            <Text style={styles.texto_carregando}>Carregando todos... 📦</Text>
-          </View>
+          <Carregamento />
         ) : (
           <FlatList
             data={contexto?.todos}
@@ -68,14 +39,61 @@ export function Todos() {
                 id={item.id}
                 titulo={item.titulo}
                 descricao={item.descricao}
+                completa={item.completa}
               />
             )}
             keyExtractor={(item) => item.id.toString()}
+            ListHeaderComponent={
+              <>
+                <Text style={styles.titulo}>Meus todo's</Text>
+                <View>
+                  <Text style={styles.criar_titulo}>Criar todo</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="titulo"
+                    value={todo?.titulo}
+                    onChange={(event) =>
+                      setTodo({
+                        ...(todo as CriarTodoDTO),
+                        titulo: event.nativeEvent.text
+                      })
+                    }
+                  />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="descricao"
+                    value={todo?.descricao}
+                    onChange={(event) =>
+                      setTodo({
+                        ...(todo as CriarTodoDTO),
+                        descricao: event.nativeEvent.text
+                      })
+                    }
+                  />
+                  <TouchableOpacity
+                    disabled={
+                      todo === null ||
+                      todo?.titulo === undefined ||
+                      todo?.descricao === undefined
+                    }
+                    onPress={() =>
+                      contexto?.criarTodo(todo as CriarTodoDTO).then((data) => {
+                        contexto.setTodos((antigo) => [
+                          ...(antigo as Todo[]),
+                          data as Todo
+                        ]);
+
+                        setTodo(null);
+                      })
+                    }
+                  >
+                    <Text style={styles.texto_botao}>Criar</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            }
           />
         )}
-        {contexto?.feedBack ? (
-          <Feedback mensagem={contexto.feedBack.mensagem} />
-        ) : null}
       </View>
     </BaseScreen>
   );
@@ -88,19 +106,14 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontFamily: "Courier Prime",
-    lineHeight: 32,
-    fontSize: 24
+    lineHeight: 40,
+    fontSize: 32
   },
-  carregando: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  texto_carregando: {
+  criar_titulo: {
     fontFamily: "Courier Prime",
     lineHeight: 32,
     fontSize: 24,
-    textAlign: "center"
+    marginTop: 16
   },
   input: {
     borderBottomWidth: 1,
@@ -108,7 +121,7 @@ const styles = StyleSheet.create({
     fontFamily: "Courier Prime",
     lineHeight: 16,
     fontSize: 16,
-    marginTop: 32,
+    marginTop: 16,
     paddingVertical: 8
   },
   texto_botao: {
@@ -119,6 +132,7 @@ const styles = StyleSheet.create({
     color: "white",
     paddingHorizontal: 16,
     textAlign: "center",
-    marginVertical: 8
+    marginVertical: 8,
+    paddingVertical: 16
   }
 });

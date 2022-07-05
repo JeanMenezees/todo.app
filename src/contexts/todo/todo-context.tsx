@@ -1,10 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
+import axios from "axios";
 import React from "react";
+import useAuth from "../../common/hooks/auth/useAuth";
+import useStorage from "../../common/hooks/storage/useStorage";
 import { AtualizarTodoDTO } from "./commands/atualizar-todo-dto";
 import { CriarTodoDTO } from "./commands/criar-todo-dto";
 import { TodoContextType } from "./todo-context-interface";
-import { TodoFeedback } from "./todo-feedback";
 import { Todo } from "./todo.interface";
 
 export const TodoContext = React.createContext<TodoContextType | null>(null);
@@ -12,126 +12,87 @@ export const TodoContext = React.createContext<TodoContextType | null>(null);
 TodoContext.displayName = "Todo";
 
 const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
-  const [todo, setTodo] = React.useState<Todo | null>(null);
-  const [feedBack, setFeedback] = React.useState<TodoFeedback | null>(null);
-
   const [todos, setTodos] = React.useState<Todo[] | null>(null);
   const [todosIsLoading, setTodosIsLoading] = React.useState<boolean | null>(
     null
   );
 
-  const criarTodo = async () => {
-    if (todo) {
-      const criarTodoDTO: CriarTodoDTO = {
-        titulo: todo?.titulo,
-        descricao: todo?.descricao
-      };
+  const criarTodo = async (todo: CriarTodoDTO): Promise<Todo | void> => {
+    const token = await useStorage("token");
+    let configs = {};
 
-      const token = await AsyncStorage.getItem("token");
-
-      const configs: AxiosRequestConfig<any> = {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      };
-
-      axios
-        .post("http://192.168.1.5:3000/todo", criarTodoDTO, configs)
-        .then(async (data) => {
-          const todoCriado: Todo = data.data;
-
-          await limparDados();
-
-          setTodos(todos ? [...todos, todoCriado] : [todoCriado]);
-        })
-        .catch((error) => {
-          setFeedback({ mensagem: "Ocorreu um erro ao criar o Todo" });
-
-          setTimeout(() => {
-            setFeedback(null);
-          }, 5000);
-        })
-        .finally(() => {
-          setFeedback({ mensagem: "Todo criado com sucesso!" });
-
-          setTimeout(() => {
-            setFeedback(null);
-          }, 5000);
-        });
+    if (token) {
+      configs = useAuth(token);
     }
+
+    return axios
+      .post("http://192.168.1.5:3000/todo", todo, configs)
+      .then((data) => {
+        const todoCriado: Todo = data.data;
+
+        return todoCriado;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const atualizarTodo = async () => {
-    const token = await AsyncStorage.getItem("token");
+  const atualizarTodo = async (
+    todo: AtualizarTodoDTO,
+    id: number
+  ): Promise<Todo | void> => {
+    const token = await useStorage("token");
+    let configs = {};
 
-    const configs: AxiosRequestConfig<any> = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-
-    if (todo) {
-      const atualizarTodoDTO: AtualizarTodoDTO = {
-        titulo: todo?.titulo,
-        descricao: todo?.descricao
-      };
-      axios
-        .put(
-          `http://192.168.1.5:3000/todo/id/${todo.id}`,
-          atualizarTodoDTO,
-          configs
-        )
-        .then((data) => setFeedback({ mensagem: "Todo alterado com sucesso!" }))
-        .catch((error) =>
-          setFeedback({ mensagem: "Ocorreu um erro ao alterar o Todo" })
-        );
+    if (token) {
+      configs = useAuth(token);
     }
+
+    return axios
+      .put(`http://192.168.1.5:3000/todo/${id}`, todo, configs)
+      .then((data) => {
+        const todoAtualizado: Todo = data.data;
+
+        return todoAtualizado;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const obterTodos = async () => {
-    const token = await AsyncStorage.getItem("token");
-
-    const configs: AxiosRequestConfig<any> = {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-
+  const obterTodos = async (): Promise<void> => {
     setTodosIsLoading(true);
 
-    axios
-      .get("http://192.168.1.5:3000/todo", configs)
-      .then((data) => {
-        const todosResposta: Todo[] = data.data;
+    const token = await useStorage("token");
+    let configs = {};
 
-        setTodos(todosResposta);
+    if (token) {
+      configs = useAuth(token);
+    }
+
+    axios
+      .get<Todo[]>("http://192.168.1.5:3000/todo", configs)
+      .then((data) => {
+        const todos: Todo[] = data.data;
+
+        setTodos(todos);
       })
-      .catch((error) =>
-        setFeedback({ mensagem: "Ocorreu um erro ao carregar os Todos" })
-      )
+      .catch((error) => {
+        console.log(error);
+      })
       .finally(() => {
         setTodosIsLoading(false);
       });
   };
 
-  const limparDados = async () => {
-    setTodo((todoAntigo) => {
-      if (todoAntigo) {
-        return { ...todoAntigo, titulo: "", descricao: "" };
-      } else return null;
-    });
-  };
-
   return (
     <TodoContext.Provider
       value={{
-        todo,
-        setTodo,
         criarTodo,
         atualizarTodo,
-        feedBack,
         obterTodos,
         todos,
+        setTodos,
         todosIsLoading
       }}
     >

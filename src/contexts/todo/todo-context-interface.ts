@@ -1,13 +1,12 @@
-import { TodoFeedback } from "./todo-feedback";
+import { AtualizarTodoDTO } from "./commands/atualizar-todo-dto";
+import { CriarTodoDTO } from "./commands/criar-todo-dto";
 import { Todo } from "./todo.interface";
 
 export interface TodoContextType {
-    todo: Todo | null;
-    setTodo: React.Dispatch<React.SetStateAction<Todo | null>>;
-    criarTodo: () => void;
-    atualizarTodo: () =>void;
-    feedBack: TodoFeedback | null;
-    obterTodos: () => void;
-    todos: Todo[] | null;
-    todosIsLoading: boolean | null;
+  criarTodo: (todo: CriarTodoDTO) => Promise<Todo | void>;
+  atualizarTodo: (todo: AtualizarTodoDTO, id: number) => Promise<Todo | void>;
+  obterTodos: () => void;
+  todos: Todo[] | null;
+  setTodos: React.Dispatch<React.SetStateAction<Todo[] | null>>;
+  todosIsLoading: boolean | null;
 }

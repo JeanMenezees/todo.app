@@ -1,16 +1,102 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect } from "react";
+import { useContext } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  Platform
+} from "react-native";
+import { TodoContext } from "../../../../contexts/todo/todo-context";
 import { Todo } from "../../../../contexts/todo/todo.interface";
+import TodoConcluido from "./concluido";
 
 export default function TodoItem(todo: Todo) {
-  return (
+  const contexto = useContext(TodoContext);
+
+  const [concluido, setConcluido] = React.useState<boolean>(false);
+  const [editar, setEditar] = React.useState<boolean>(false);
+
+  const [todoEditado, setTodoEditado] = React.useState<Todo>({
+    id: todo.id,
+    titulo: todo.titulo,
+    descricao: todo.descricao,
+    completa: todo.completa
+  });
+
+  useEffect(() => {
+    setConcluido(todo.completa);
+  }, []);
+
+  return concluido ? (
+    <TodoConcluido
+      id={todo.id}
+      titulo={todo.titulo}
+      descricao={todo.descricao}
+      completa={todo.completa}
+    />
+  ) : editar ? (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TextInput
+        style={styles.input}
+        placeholder="titulo"
+        onChange={(event) =>
+          setTodoEditado({ ...todoEditado, titulo: event.nativeEvent.text })
+        }
+        value={todoEditado.titulo}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="descricao"
+        onChange={(event) =>
+          setTodoEditado({ ...todoEditado, descricao: event.nativeEvent.text })
+        }
+        value={todoEditado.descricao}
+      />
+      <TouchableOpacity
+        disabled={
+          todoEditado === null ||
+          todoEditado.descricao === undefined ||
+          todoEditado.titulo === undefined
+        }
+        onPress={() =>
+          contexto
+            ?.atualizarTodo(todoEditado, todoEditado.id)
+            .then((data) => setEditar(false))
+        }
+      >
+        <Text style={styles.texto_botao}>Concluir</Text>
+      </TouchableOpacity>
+    </KeyboardAvoidingView>
+  ) : (
     <View style={styles.container}>
       <Text style={styles.titulo}>{todo.titulo}</Text>
       <Text style={styles.descricao}>{todo.descricao}</Text>
       <View style={styles.botoes}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setEditar(true)}>
           <Text style={styles.texto_botao}>Editar</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            contexto
+              ?.atualizarTodo(
+                {
+                  titulo: todo.titulo,
+                  descricao: todo.descricao,
+                  completa: true
+                },
+                todo.id
+              )
+              .then((data) => {
+                setConcluido(true);
+              })
+          }
+        >
           <Text style={styles.texto_botao}>Finalizar</Text>
         </TouchableOpacity>
       </View>
@@ -50,5 +136,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginVertical: 8,
     marginRight: 8
+  },
+  input: {
+    borderBottomWidth: 1,
+    width: "100%",
+    fontFamily: "Courier Prime",
+    lineHeight: 16,
+    fontSize: 16,
+    marginTop: 16,
+    paddingVertical: 8
   }
 });
