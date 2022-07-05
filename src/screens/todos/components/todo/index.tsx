@@ -60,8 +60,6 @@ export default function TodoItem(todo: Todo) {
               )
               .then((data) => {
                 contexto.obterTodos();
-
-                setConcluido(true);
               })
           }
         >
