@@ -5,9 +5,9 @@
 
   <br>
 
-  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JeanMenezees/todo.app?style=social">
-
 </div>
+
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JeanMenezees/todo.app?style=social">
 
 <br>
 
