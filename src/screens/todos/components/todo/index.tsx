@@ -41,7 +41,6 @@ export default function TodoItem(todo: Todo) {
         style={styles.input}
         placeholder="titulo"
         onChange={(event) => {
-          console.log(event.nativeEvent.text);
           setTodoItem({ ...todoItem, titulo: event.nativeEvent.text });
         }}
         value={todoItem.titulo}

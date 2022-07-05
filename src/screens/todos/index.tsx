@@ -73,8 +73,8 @@ export function Todos() {
                   <TouchableOpacity
                     disabled={
                       todo === null ||
-                      todo?.titulo === undefined ||
-                      todo?.descricao === undefined
+                      todo?.titulo === "" ||
+                      todo?.descricao === ""
                     }
                     onPress={() =>
                       contexto?.criarTodo(todo as CriarTodoDTO).then((data) => {
