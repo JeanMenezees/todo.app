@@ -42,8 +42,8 @@ function Login() {
           onPressIn={() => usuarioContext?.setPrecisaValidar(true)}
         />
         <TextInput
+          secureTextEntry={true}
           style={styles.input}
-          keyboardType="visible-password"
           placeholder="senha"
           value={usuarioContext?.usuario?.password}
           onChange={(event) => {

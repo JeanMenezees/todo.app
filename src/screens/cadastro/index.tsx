@@ -48,7 +48,7 @@ function Cadastrar() {
         />
         <TextInput
           style={styles.input}
-          keyboardType="visible-password"
+          secureTextEntry={true}
           placeholder="senha"
           value={contexto?.usuario?.password}
           onChange={(event) => {
@@ -71,11 +71,7 @@ function Cadastrar() {
           disabled={contexto?.erro ? true : false}
           onPress={() => contexto?.registrar()}
         >
-          <Text
-            style={styles.botao_cadastrar}
-          >
-            Cadastrar
-          </Text>
+          <Text style={styles.botao_cadastrar}>Cadastrar</Text>
         </TouchableOpacity>
         <TouchableOpacity>
           <Text
