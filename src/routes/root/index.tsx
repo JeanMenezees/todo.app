@@ -7,6 +7,7 @@ import React from "react";
 import { Todos } from "../../screens/todos";
 import UsuarioProvider from "../../contexts/usuario/usuario-context";
 import TodoProvider from "../../contexts/todo/todo-context";
+import AtualizarTodo from "../../screens/atualizar-todo";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ export default function Root() {
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Cadastrar" component={Cadastrar} />
           <Stack.Screen name="Todos" component={Todos} />
+          <Stack.Screen name="AtualizarTodo" component={AtualizarTodo} />
         </Stack.Navigator>
       </TodoProvider>
     </UsuarioProvider>

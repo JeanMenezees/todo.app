@@ -17,6 +17,8 @@ const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
     null
   );
 
+  const [todoParaAtualizar, setTodoParaAtualizar] = React.useState<Todo | null>(null);
+
   const criarTodo = async (todo: CriarTodoDTO): Promise<Todo | void> => {
     const token = await useStorage("token");
     let configs = {};
@@ -93,7 +95,9 @@ const TodoProvider: React.FC<React.ReactNode> = ({ children }) => {
         obterTodos,
         todos,
         setTodos,
-        todosIsLoading
+        todosIsLoading,
+        todoParaAtualizar,
+        setTodoParaAtualizar
       }}
     >
       {children}

@@ -9,4 +9,6 @@ export interface TodoContextType {
   todos: Todo[] | null;
   setTodos: React.Dispatch<React.SetStateAction<Todo[] | null>>;
   todosIsLoading: boolean | null;
+  todoParaAtualizar: Todo | null;
+  setTodoParaAtualizar: React.Dispatch<React.SetStateAction<Todo | null>>;
 }

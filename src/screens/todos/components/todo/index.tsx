@@ -1,78 +1,50 @@
+import { useNavigation } from "@react-navigation/native";
+import {
+  NativeStackNavigationProp,
+  NativeStackScreenProps
+} from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import { useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TodoContext } from "../../../../contexts/todo/todo-context";
 import { Todo } from "../../../../contexts/todo/todo.interface";
-import TodoConcluido from "./concluido";
+import { UsuarioFormParamRoute } from "../../../../contexts/usuario/usuario-form-route-param";
+import TodoConcluido from "../concluido";
+
+type TodoScreenProps = NativeStackNavigationProp<
+  UsuarioFormParamRoute,
+  "Todos"
+>;
 
 export default function TodoItem(todo: Todo) {
   const contexto = useContext(TodoContext);
+  const navigation = useNavigation<TodoScreenProps>();
 
   const [concluido, setConcluido] = React.useState<boolean>(false);
-  const [editar, setEditar] = React.useState<boolean>(false);
-
-  const [todoItem, setTodoItem] = React.useState<Todo>({
-    id: todo.id,
-    titulo: todo.titulo,
-    descricao: todo.descricao,
-    completa: todo.completa
-  });
 
   useEffect(() => {
-    setConcluido(todoItem.completa);
+    setConcluido(todo.completa);
   }, []);
 
   return concluido ? (
     <TodoConcluido
-      id={todoItem.id}
-      titulo={todoItem.titulo}
-      descricao={todoItem.descricao}
-      completa={todoItem.completa}
+      id={todo.id}
+      titulo={todo.titulo}
+      descricao={todo.descricao}
+      completa={todo.completa}
     />
-  ) : editar ? (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="titulo"
-        onChange={(event) => {
-          setTodoItem({ ...todoItem, titulo: event.nativeEvent.text });
-        }}
-        value={todoItem.titulo}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="descricao"
-        onChange={(event) =>
-          setTodoItem({ ...todoItem, descricao: event.nativeEvent.text })
-        }
-        value={todoItem.descricao}
-      />
-      <TouchableOpacity
-        disabled={!todoItem.descricao || !todoItem.titulo}
-        onPress={() =>
-          contexto
-            ?.atualizarTodo(
-              { titulo: todoItem.titulo, descricao: todoItem.descricao },
-              todoItem.id
-            )
-            .then((data) => setEditar(false))
-        }
-      >
-        <Text style={styles.texto_botao}>Concluir</Text>
-      </TouchableOpacity>
-    </View>
   ) : (
     <View style={styles.container}>
-      <Text style={styles.titulo}>{todoItem.titulo}</Text>
-      <Text style={styles.descricao}>{todoItem.descricao}</Text>
+      <Text style={styles.titulo}>{todo.titulo}</Text>
+      <Text style={styles.descricao}>{todo.descricao}</Text>
       <View style={styles.botoes}>
-        <TouchableOpacity onPress={() => setEditar(true)}>
+        <TouchableOpacity
+          onPress={() => {
+            contexto?.setTodoParaAtualizar(todo);
+
+            navigation.navigate("AtualizarTodo");
+          }}
+        >
           <Text style={styles.texto_botao}>Editar</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -80,14 +52,15 @@ export default function TodoItem(todo: Todo) {
             contexto
               ?.atualizarTodo(
                 {
-                  titulo: todoItem.titulo,
-                  descricao: todoItem.descricao,
+                  titulo: todo.titulo,
+                  descricao: todo.descricao,
                   completa: true
                 },
                 todo.id
               )
               .then((data) => {
                 contexto.obterTodos();
+
                 setConcluido(true);
               })
           }

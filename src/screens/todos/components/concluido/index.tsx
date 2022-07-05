@@ -1,4 +1,4 @@
-import { Todo } from "../../../../../contexts/todo/todo.interface";
+import { Todo } from "../../../../contexts/todo/todo.interface";
 
 import { View, Text, StyleSheet } from "react-native";
 
