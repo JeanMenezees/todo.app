@@ -5,7 +5,7 @@
 
   <br>
 
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JeanMenezees/todo.app?style=for-the-badge"> <img alt="GitHub forks" src="https://img.shields.io/github/forks/JeanMenezees/todo.app?style=for-the-badge">
+  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JeanMenezees/todo.app?style=social">
 
 </div>
 
