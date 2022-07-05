@@ -87,6 +87,7 @@ export default function TodoItem(todo: Todo) {
                 todo.id
               )
               .then((data) => {
+                contexto.obterTodos();
                 setConcluido(true);
               })
           }
